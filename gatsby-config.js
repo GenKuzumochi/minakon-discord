@@ -1,6 +1,10 @@
 module.exports = {
   siteMetadata: {
     title: "Minakon Discord Experimental",
+    description: "",
+    social: {
+      twitter: ""
+    }
   },
   plugins: [
     "gatsby-plugin-sass",
@@ -11,5 +15,12 @@ module.exports = {
       },
     },
     "gatsby-plugin-react-helmet",
+    `gatsby-transformer-json`,
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        path: `./discord/`,
+      },
+    },
   ],
 };

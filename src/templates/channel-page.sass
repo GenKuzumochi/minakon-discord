@@ -1,0 +1,73 @@
+body {
+    background: #36393f;
+    color: rgb(220, 221, 222);
+    font-feature-settings: "pkna"; /* カーニング */
+    letter-spacing: 0.06em; /* 文字間隔調整 */
+
+}
+
+.at{
+    color: #AACCFF;
+}
+
+.normal-talk, .allat {
+    &:hover {
+        background:#303336;
+    }
+}
+
+.normal-talk {
+    display: grid;
+    grid: 1.3em 1fr / 58px 1fr;
+    padding: 0.5em 0;
+    .pc-img-link {
+        grid-row: 1/3;
+        grid-column: 1/2;
+        text-decoration: none;
+    }
+    h3 {
+        margin: 0;
+    }
+    .pc-img-alt {
+        border-radius: 3px;
+        color: white;
+        text-shadow: -1px -1px #666;
+        background: #999;
+        padding: 5px;
+        width: 48px;
+        height: 48px;
+        box-sizing: border-box;
+        margin: 2px;
+    }
+}
+
+.allat{
+    display: flex;
+    align-items: center;
+    .pc-img {
+        width: 24px !important;
+        height: 24px !important;
+        margin-left: 24px;
+        margin-right: 6px;
+    }
+    h3 {
+        display: none
+    }
+    .pc-img-alt {
+        border-radius: 3px;
+        color: white;
+        text-shadow: -1px -1px #666;
+        background: #999;
+        padding: 5px;
+        width: 48px;
+        box-sizing: border-box;
+        margin: 2px;
+        font-size: 0.5em;
+        margin-right: 6px;
+        text-decoration: none;
+    }
+
+    .pc-img-link{
+        text-decoration: none;
+    }
+}

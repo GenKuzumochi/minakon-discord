@@ -16,7 +16,7 @@
   },
   "license": "0BSD",
   "dependencies": {
-    "date-fns": "^2.16.1",
+    "dayjs": "^1.10.1",
     "gatsby": "^2.26.1",
     "gatsby-image": "^2.8.0",
     "gatsby-plugin-google-analytics": "^2.8.0",

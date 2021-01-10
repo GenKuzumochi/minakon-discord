@@ -42,14 +42,14 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
   // `context` is available in the template as a prop and as a variable in GraphQL
 
   for (c of channels) {
-    createPage({
-      path: c.node.channel.id,
-      component: chanPage,
-      context: {
-        channel: c.node.channel.id
-      }
-    })
-
+    if (c => c.category === "PC間交流チャンネル" || c.category === "対NPC相談チャンネル")
+      createPage({
+        path: c.node.channel.id,
+        component: chanPage,
+        context: {
+          channel: c.node.channel.id
+        }
+      })
   }
 }
 

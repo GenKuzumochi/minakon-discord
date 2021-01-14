@@ -20,6 +20,7 @@ jobs:
           submodules: true
       - name: discord
         run: sh tools/discord.sh
+        working-directory: tools
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v0.0.1-preview

@@ -19,7 +19,7 @@ jobs:
         with:
           submodules: true
       - name: discord
-        run: sh tools/discord.sh
+        run: sh discord.sh
         working-directory: tools
       - name: Build And Deploy
         id: builddeploy

@@ -42,7 +42,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
   // `context` is available in the template as a prop and as a variable in GraphQL
 
   for (c of channels) {
-    if (c => c.category === "PC間交流チャンネル" || c.category === "対NPC相談チャンネル")
+    if (c.node.channel.category === "PC間交流チャンネル" || c.node.channel.category === "対NPC相談チャンネル")
       createPage({
         path: c.node.channel.id,
         component: chanPage,
@@ -57,7 +57,9 @@ const { createRemoteFileNode } = require(`gatsby-source-filesystem`);
 
 // sourceNodesにて外部画像のファイルノードを作成する
 exports.sourceNodes = async ({ actions, createNodeId, cache, store }) => {
-  const pcs = await fetch("https://script.googleusercontent.com/macros/echo?user_content_key=r-I00_nsEOr0PGentTUX9DSmq92qf0-XuPlpDlJPYf5TuK1F1afqdYWZtOtYyBInXAWTp-SPccw6dWbgbEgYzyaukzs0NzWzm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnBYxO4Ik933KBgKeyvHNwfXUCyTu138mxRtPqjnFz2ES3s7yjnFmyge2GobZCumAykW-dnclfdIe&lib=MR4Oy3jvuDgy_WSouDhLVM1tXpvbgGpFr").then(x => x.json())
+  const pc_data = await fetch("https://script.googleusercontent.com/macros/echo?user_content_key=r-I00_nsEOr0PGentTUX9DSmq92qf0-XuPlpDlJPYf5TuK1F1afqdYWZtOtYyBInXAWTp-SPccw6dWbgbEgYzyaukzs0NzWzm5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnBYxO4Ik933KBgKeyvHNwfXUCyTu138mxRtPqjnFz2ES3s7yjnFmyge2GobZCumAykW-dnclfdIe&lib=MR4Oy3jvuDgy_WSouDhLVM1tXpvbgGpFr").then(x => x.json())
+
+  const pcs = pc_data.map((x, i) => ({ index: i, ...x }))
   await Promise.all(pcs.map(async p => {
     if (p.chara_card === "") return;
 
@@ -68,6 +70,7 @@ exports.sourceNodes = async ({ actions, createNodeId, cache, store }) => {
       store,
       createNodeId,
       createNode: actions.createNode,
+      name: p.index
     });
 
     await actions.createNodeField({

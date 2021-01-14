@@ -6,7 +6,7 @@ import Layout from "../components/layout"
 import SEO from "../components/seo"
 import id2pc from "../id2pc.json"
 
-import "./channel-page.sass"
+import "./channel-page.scss"
 import dayjs from "dayjs"
 import { last, debounce } from "lodash"
 
@@ -103,7 +103,7 @@ function renderMessages(msgs, imgs, channel) {
                   <div className="pc-img-alt">{m.first}</div>
               }
             </Link>
-            <h3>{m.name} <Link to={`https://discord.com/channels/779354026298179604/${channel.id}/${m.id}`}>{m.timestamp.format("YYYY/MM/DD hh:mm")}</Link></h3>
+            <h3>{m.name} <Link to={`https://discord.com/channels/779354026298179604/${channel.id}/${m.id}`} title={`${m.timestamp.format("YYYY/MM/DD hh:mm")}のDiscord`}>{m.timestamp.format("MM/DD hh:mm")}</Link></h3>
             <div>
               {
                 m.msg.map(x => <div className={x.startsWith("@") ? "at" : "normal"}>{x}</div>)

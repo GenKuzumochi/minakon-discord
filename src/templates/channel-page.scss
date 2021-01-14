@@ -1,0 +1,143 @@
+body {
+  background: #36393f;
+  color: rgb(220, 221, 222);
+  font-feature-settings: "pkna"; /* カーニング */
+  letter-spacing: 0.06em; /* 文字間隔調整 */
+}
+
+.at {
+  color: #aaccff;
+}
+
+.normal-talk,
+.allat {
+  &:hover {
+    background: #303336;
+  }
+}
+
+.normal-talk {
+  display: grid;
+  grid: 1.3em 1fr / 58px 1fr;
+  .pc-img-link {
+    grid-row: 1/3;
+    grid-column: 1/2;
+    text-decoration: none;
+  }
+  h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: normal;
+    color: #687;
+    a {
+      color: #666;
+      font-size: 0.8em;
+      font-weight: normal;
+      font-family: sans-serif;
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+  .pc-img-alt {
+    border-radius: 3px;
+    color: white;
+    text-shadow: -1px -1px #666;
+    background: #999;
+    padding: 5px;
+    width: 48px;
+    height: 48px;
+    box-sizing: border-box;
+    margin: 2px;
+    font-size: 12px;
+    overflow: hidden;
+  }
+}
+
+.allat {
+  display: flex;
+  align-items: center;
+  .pc-img {
+    width: 24px !important;
+    height: 24px !important;
+    margin-left: 24px;
+    margin-right: 6px;
+  }
+  h3 {
+    display: none;
+  }
+  .pc-img-alt {
+    border-radius: 3px;
+    color: white;
+    text-shadow: -1px -1px #666;
+    background: #999;
+    padding: 2px;
+    width: 48px;
+    box-sizing: border-box;
+    margin: 2px;
+    font-size: 0.5em;
+    margin-right: 6px;
+    text-decoration: none;
+  }
+
+  .pc-img-link {
+    text-decoration: none;
+  }
+}
+
+.talk-block-header {
+  background: #555;
+  margin: 0 -10px;
+  padding: 1em;
+  position: relative;
+  display: flex;
+
+  .pc-img-link {
+    text-decoration: none;
+    color: white;
+    display: inline-flex;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    align-items: end;
+    margin-left: 5px;
+  }
+  .pc-img {
+    width: 24px !important;
+    height: 24px !important;
+    margin-right: 3px;
+  }
+
+  .anchor {
+    color: #ccc;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+      &:hover::before {
+        content: "#";
+        display: block;
+        position: absolute;
+        left: 0;
+        font-size: 30px;
+      }
+    }
+  }
+}
+
+.talk-block {
+  display: none;
+  & > div {
+    content-visibility: auto;
+    &.normal-talk {
+      contain-intrinsic-size: 3rem;
+    }
+
+    &.allat {
+      contain-intrinsic-size: 1rem;
+    }
+  }
+}
+
+a {
+  color: white;
+}

@@ -203,7 +203,7 @@ query DiscordChannelQuery($channel: String!) {
     edges {
       node {
         childImageSharp {
-          fixed(width: 48, height: 48 , cropFocus: NORTH) {
+          fixed(width: 48, height: 48 , cropFocus: NORTH, quality: 80) {
             src
           }
         }

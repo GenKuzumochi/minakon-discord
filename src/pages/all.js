@@ -6,7 +6,7 @@ import Layout from "../components/layout"
 import SEO from "../components/seo"
 import id2pc from "../id2pc.json"
 
-import "./channel-page.scss"
+import "../templates/channel-page.scss"
 import dayjs from "dayjs"
 import { last, debounce } from "lodash"
 
@@ -32,6 +32,7 @@ function preprocessMessages(msgs) {
         name: name,
         first: first,
         id: m.id,
+        channel: m.channel,
         msg: []
       };
       if (talk.length > 0) all.push({
@@ -54,6 +55,7 @@ function preprocessMessages(msgs) {
         name: name,
         first: first,
         id: m.id,
+        channel: m.channel,
         msg: []
       };
     }
@@ -73,10 +75,10 @@ function preprocessMessages(msgs) {
     allTalker: Array.from(talker),
     pcTalker: Array.from(pTalker),
   });
-  return all;
+  return all.sort( (a,b) => a.talks[0].timestamp.diff(b.talks[0].timestamp, "hour", true));
 }
 
-function renderMessages(msgs, imgs, channel) {
+function renderMessages(msgs, imgs) {
   const ms = preprocessMessages(msgs);
   const talk = []
   for (const mlist of ms) {
@@ -84,6 +86,9 @@ function renderMessages(msgs, imgs, channel) {
       <div className="talk-block-header" id={mlist.talks[0].timestamp.format("YYYYMMDD-hhmm")}>
         <Link to={`#${mlist.talks[0].timestamp.format("YYYYMMDD-hhmm")}`} className="anchor">
           {mlist.talks[0].timestamp.format("YYYY/MM/DD hh:mm")}〜{last(mlist.talks).timestamp.format("YYYY/MM/DD hh:mm")}
+        </Link>
+        <Link to={`/${mlist.talks[0].channel.id}#${mlist.talks[0].timestamp.format("YYYYMMDD-hhmm")}`} className="anchor">
+          {mlist.talks[0].channel.name}
         </Link>
         {
           mlist.pcTalker.map(p => <Link className="pc-img-link" to={`https://mk.kuzumochi.work/pc/${p}`} >
@@ -103,7 +108,8 @@ function renderMessages(msgs, imgs, channel) {
                   <div className="pc-img-alt">{m.first}</div>
               }
             </Link>
-            <h3>{m.name} <Link to={`https://discord.com/channels/779354026298179604/${channel.id}/${m.id}`} title={`${m.timestamp.format("YYYY/MM/DD hh:mm")}のDiscord`}>{m.timestamp.format("MM/DD hh:mm")}</Link></h3>
+            <h3>{m.name} <Link to={`https://discord.com/channels/779354026298179604/${m.channel.id}/${m.id}`} title={`${m.timestamp.format("YYYY/MM/DD hh:mm")}のDiscord`}>{m.timestamp.format("MM/DD hh:mm")}</Link></h3>
+            
             <div>
               {
                 m.msg.map(x => <div className={x.startsWith("@") ? "at" : "normal"}>{x}</div>)
@@ -116,27 +122,6 @@ function renderMessages(msgs, imgs, channel) {
     )
   }
   return talk
-  // const res = [];
-  // let last = null;
-  // for (const m of msgs) {
-  //   const name = id2pc[m.author.id];
-  //   if (!last || last.author.id !== m.author.id) {
-  //     if (m.author.id === "209048672195969025") res.push(<h3 className="sidekick">Siekick</h3>)
-  //     res.push(<h3 className={name}><GatsbyImage resolutions={imgs[name]?.childImageSharp.fixed} />{name || m.author.id}</h3>);
-  //   }
-  //   if (m.content.startsWith("@") | m.content.startsWith("＠")) {
-  //     if (m.mentions.length >= 2)
-  //       res.push("ERROR");
-  //     else if (m.mentions.length === 1)
-  //       res.push(<div>{m.content.replace(m.mentions[0].name, id2pc[m.mentions[0].id])}</div>)
-  //     else
-  //       res.push(<div className="at">{m.content}</div>)
-  //   } else {
-  //     res.push(<div>{m.content}</div>)
-  //   }
-  //   last = m;
-  // }
-  // return res;
 }
 
 
@@ -150,12 +135,7 @@ const Style = () => {
   }
   return <><input value={filterText} onChange={handleFilter} placeholder="PC名で絞り込み" />
     <style>
-      {filter === "" ?
-        `
-      .talk-block{
-        display: block!important;
-      }
-    ` : `
+      {filter === "" ? `` : `
       .talk-block${ filter.split(/\s/).map( x => `[class*='${x}']`).join("") } {
         display: block;
       }
@@ -163,7 +143,7 @@ const Style = () => {
     </style></>
 }
 
-const DiscordChannelTemplate = ({ data, location }) => {
+const DiscordChannelAll = ({ data, location }) => {
   function createimageDict(images) {
     const list = {};
     for (const i of images) {
@@ -171,29 +151,29 @@ const DiscordChannelTemplate = ({ data, location }) => {
     }
     return list;
   }
-  const { channel, messages } = data.allDiscordJson.edges[0].node;
+  const channels = data.allDiscordJson.edges;
   const images = createimageDict(data.allFile.edges);
   const siteTitle = data.site.siteMetadata?.title || `Title`
-
+  const messages = channels.flatMap( c => c.node.messages.map(m => ({...m,channel:c})))
 
   return (
     <Layout location={location} title={siteTitle}>
       <SEO
-        title={channel.name}
-        description={channel.name}
+        title="すべて"
       />
-      <h1>{channel.name} <Style /></h1>
+      <h1>すべて <Style /></h1>
+      PC名を入力して表示します。スペース区切りで同時に出ているシーンが検索されます。
       <article className="blog-post">
-        {renderMessages(messages, images, channel)}
+        {renderMessages(messages, images)}
       </article>
     </Layout>
   )
 }
 
-export default DiscordChannelTemplate
+export default DiscordChannelAll
 
 export const pageQuery = graphql`
-query DiscordChannelQuery($channel: String!) {
+query DiscordChannelAllQuery {
   site {
     siteMetadata {
       title
@@ -215,7 +195,7 @@ query DiscordChannelQuery($channel: String!) {
       }
     }
   }
-  allDiscordJson(filter: {channel: {id: {eq: $channel}}}) {
+  allDiscordJson(filter: {channel: {category: {regex: "/(PC間交流チャンネル|対NPC相談チャンネル)/" }}} ) {
     edges {
       node {
         messages {
@@ -234,6 +214,7 @@ query DiscordChannelQuery($channel: String!) {
         channel {
           id
           name
+          category
         }
       }
     }

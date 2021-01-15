@@ -15,6 +15,10 @@ const IndexPage = ({ data, location }) => {
         }
       </ul>
 
+      ↓↓↓↓↓キケン↓↓↓↓<br>
+      <Link to="/all">すべて</Link><br />
+      ↑↑↑↑↑ 13MBぐらいあります ↑↑↑↑↑</br>
+      スマホの方は非推奨
     </main>
   )
 }

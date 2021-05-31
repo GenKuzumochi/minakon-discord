@@ -64,33 +64,35 @@ exports.sourceNodes = async ({ actions, createNodeId, cache, store }) => {
     if (p.chara_card === "") return;
 
     // createRemoteFileNodeで外部の画像のファイルノードを作成する
-    const fileNode = await createRemoteFileNode({
-      url: p.chara_card,
-      cache,
-      store,
-      createNodeId,
-      createNode: actions.createNode,
-      name: p.index
-    });
+    try {
+      const fileNode = await createRemoteFileNode({
+        url: p.chara_card,
+        cache,
+        store,
+        createNodeId,
+        createNode: actions.createNode,
+        name: p.index
+      });
 
-    await actions.createNodeField({
-      node: fileNode,
-      name: "type",
-      value: "pc"
-    });
-    await actions.createNodeField({
-      node: fileNode,
-      name: "fullname",
-      value: p.firstname + (p.lastname === "" ? "" : "・" + p.lastname),
-    });
+      await actions.createNodeField({
+        node: fileNode,
+        name: "type",
+        value: "pc"
+      });
+      await actions.createNodeField({
+        node: fileNode,
+        name: "fullname",
+        value: p.firstname + (p.lastname === "" ? "" : "・" + p.lastname),
+      });
 
-    // メタ情報として画像のURLを付与
-    await actions.createNodeField({
-      node: fileNode,
-      name: 'link',
-      value: p.chara_card,
-    });
+      // メタ情報として画像のURLを付与
+      await actions.createNodeField({
+        node: fileNode,
+        name: 'link',
+        value: p.chara_card,
+      });
 
-    return fileNode;
+      return fileNode;
+    } catch (e) { }
   }));
 }

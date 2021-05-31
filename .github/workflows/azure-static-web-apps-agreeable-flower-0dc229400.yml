@@ -26,7 +26,7 @@ jobs:
         env:
           DISCORD_TOKEN: ${{secrets.DISCORD_TOKEN}}
       - name: zip
-        run: sh zip.sh
+        run: sh tools/zip.sh
         env:
           ARTIFACT_SECRET: ${{secrets.ARTIFACT_SECRET}}
       - uses: actions/upload-artifact@v2
